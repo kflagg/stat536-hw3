@@ -1,4 +1,5 @@
 *.md
 *.Rproj
-text2pdf*
+text2pdf.3640
+.Rproj.user
 
