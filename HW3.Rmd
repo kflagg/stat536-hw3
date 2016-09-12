@@ -1,11 +1,11 @@
 ---
+title: "Time Series HW 3"
+author: "Kenny Flagg and Paul Harmon"
+date: ''
+output: pdf_document
 word_document:
   fig_height: 7
   fig_width: 10
-author: "Kenny Flagg and Paul Harmon"
-date: ''
-output: word_document
-title: "Time Series HW 3"
 ---
 
 ```{r setup, include=FALSE}
