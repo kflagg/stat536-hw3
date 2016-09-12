@@ -19,6 +19,21 @@ You can alone or in pairs that may or may not be people you worked with before. 
 I mentioned de-seasonalizing of time series, where the seasonal variation is removed from the series to highlight variation at either higher or lower frequencies. There are a variety of techniques for doing this but the simplest is to just subtract the mean for each month from the observations. And the easiest way to find that is using `lm(y~month,data=...)`. 
 
 1) For the Bozeman temperature data from HW 1 and 2, estimate a model with month only, subtract its fitted values from the responses (or just extract residuals). Plot the residuals vs the fractional `Year` variable and compare the plot of this result to the plot of the original time series. 
+```{r problem 1}
+weather = read.csv("https://dl.dropboxusercontent.com/u/77307195/rawbozemandata.csv", header = TRUE)
+
+weather$YEAR = substr(as.character(weather$DATE), 0,nchar(weather$DATE)-2)
+weather$MONTH = as.factor(substr(as.character(weather$DATE),5,nchar(weather$DATE)))
+weather$year = (floor(weather$DATE/100))
+weather$Month<-round((weather$DATE/100-weather$year)*100,1)
+weather$Yearfrac<-weather$year+(weather$Month-1)/12 #makes it an integer variable
+#fit the linear model
+lm.weather = lm(MMXT ~ MONTH, data = weather)
+lm.weather$residuals
+plot(weather$Yearfrac, lm.weather$residuals, pch = 20, col = "orange4", main = "Residuals vs. Year", xlab = "Year", ylab = "Residuals")
+
+```
+
 
 2) In the de-seasonalized Bozeman temperature data set, re-assess evidence for the linear trend. Compare the result (test statistic, degrees of freedom and size of p-value) of just fitting a linear time trend in these de-seasonalized responses to the result from our original model with a linear year component and a month adjustment (not the quadratic trend model).
 
@@ -48,6 +63,7 @@ Note: when you use `time()` to generate the `Year` variable from a time series o
 ### Documenting R version 
 
 ```{r}
+sessionInfo()$R.version$nickname
 getRversion()
 ```
 
