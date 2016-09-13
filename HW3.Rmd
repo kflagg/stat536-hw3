@@ -73,8 +73,9 @@ hadcrut.ts <- ts(hadcrut$median.temp.anom, start = 1850, frequency = 12)
     _Note: when you use `time()` to generate the `Year` variable from a time series object it retains some time series object information that can cause conflicts later on. Create a new variable in your data.frame that uses something like `as.vector(time(tsdataname))`._
 
     ```{r problem 4, message = FALSE}
-hadcrut$yearfrac <- time(hadcrut.ts)
-had.lm1 <- lm(median.temp.anom ~ yearfrac, data = hadcrut)
+hadcrut$yearfrac <- as.vector(time(hadcrut.ts))
+hadcrut$month <- factor(round(1 + 12 * (hadcrut$yearfrac %% 1), 0))
+had.lm1 <- lm(median.temp.anom ~ month + yearfrac, data = hadcrut)
 summary(had.lm1)
 
 require(effects)
