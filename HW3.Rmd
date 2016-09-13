@@ -53,9 +53,29 @@ summary(lm.deseasoned)
 
     _Make a plot versus time of the ensemble medians and use that as your response variable in the following questions. Discuss trend, seasonality, outliers, and variability._
 
+    ```{r problem 3}
+hadcrut <- read.table('HadCRUT.4.4.0.0.monthly_nh.txt',
+                      col.names = c('Date', 'median.temp.anom',
+                                    'bias.l95', 'bias.u95',
+                                    'meas.l95', 'meas.u95',
+                                    'coverage.l95', 'coverage.u95',
+                                    'error.l95', 'error.u95',
+                                    'l95', 'u95'))
+hadcrut.ts <- ts(hadcrut$median.temp.anom, start = 1850, frequency = 12)
+```
+
 4) _Our main focus with these data will be on estimating the long-term trend, starting with polynomial trend models. But first, check for seasonality in a model that accounts for a linear time trend. Use our previous fractional year for the trend. Report an `effects` plot and a test for the month model component._
 
     _Note: when you use `time()` to generate the `Year` variable from a time series object it retains some time series object information that can cause conflicts later on. Create a new variable in your data.frame that uses something like `as.vector(time(tsdataname))`._
+
+    ```{r problem 4, message = FALSE}
+hadcrut$yearfrac <- time(hadcrut.ts)
+had.lm1 <- lm(median.temp.anom ~ yearfrac, data = hadcrut)
+summary(had.lm1)
+
+require(effects)
+plot(allEffects(had.lm1))
+```
 
 5) _Check the residuals versus fitted values for any evidence of nonlinearity in the residuals vs fitted that was missed by the model with a linear trend and month component. Also note any potential issues with the constant variance assumption._
 
