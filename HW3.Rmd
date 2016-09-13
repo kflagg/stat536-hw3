@@ -17,6 +17,8 @@ _You can alone or in pairs that may or may not be people you worked with before.
 
 _I mentioned de-seasonalizing of time series, where the seasonal variation is removed from the series to highlight variation at either higher or lower frequencies. There are a variety of techniques for doing this but the simplest is to just subtract the mean for each month from the observations. And the easiest way to find that is using `lm(y~month,data=...)`._
 
+**Note that Kenny and Paul have ***NOT*** worked on any previous homework assignments.**
+
 1) _For the Bozeman temperature data from HW 1 and 2, estimate a model with month only, subtract its fitted values from the responses (or just extract residuals). Plot the residuals vs the fractional `Year` variable and compare the plot of this result to the plot of the original time series._
 
     ```{r problem 1}
@@ -80,13 +82,22 @@ plot(allEffects(had.lm1))
 ```
 
 5) _Check the residuals versus fitted values for any evidence of nonlinearity in the residuals vs fitted that was missed by the model with a linear trend and month component. Also note any potential issues with the constant variance assumption._
-```{r}
+
+Based on the plot below, there appears to be a wavy pattern occuring in the residuals over time that is not being accounted for in the model with a linear trend and month component.  Furthermore, the spread of observations is not constant; it appears that the spread for smaller fitted values is wider near fitted values of -0.5 and much narrower for larger fitted values.  
+```{r problem_five}
 plot(had.lm1$fitted.values, had.lm1$residuals, pch = 20, col = "blue2", main = "Residuals vs. Fitted Values", xlab = "Fitted Values", ylab = "Residuals")
+
+
 ```
 
 6) _You can add higher order polynomial terms to models using `x1+I(x1^2)+I(x1^3)`... or using the `poly` function, such as `poly(x1,3,raw=T)` for a cubic polynomial that includes the linear and quadratic components (we want this!). The `raw=T` keeps the variables in their raw or input format. Estimate the same model but now using polynomial trends that steps up from linear (poly(time,1,raw=T)) and stop when you get a failure to estimate a part of the model. Briefly discuss what happened._
-```{r}
 
+The following code estimates the ith-degree polynomial, where i ranges from 1 to 10. Thus, we see that from the returned summary output we get estimates for the coefficients up to the 5th degree polynomial. (Note that had we successfully estimated every part of the model for all 10 coefficients, we would have simply expanded our for-loop to contain more iterations.) It appears that the 5th degree 
+```{r}
+for (i in 1:10){
+had.lm.poly = lm(median.temp.anom ~ poly(yearfrac,i,raw = TRUE), data = hadcrut)
+print(summary(had.lm.poly))
+}
 ```
 
 7) _If we center or, even better, make the polynomial functions orthogonal to one another, we can avoid the issue in the previous question. Use `poly(x1,?,raw=F)` and step up the polynomial order for time until the p-value for the last coefficient (use `summary()`) is "large", reporting the single test result for each step in the building process. Then drop back one order and re-fit the model. Report the `effects` plot of the resulting model and describe the estimated trend. Note: aside from access to orthogonal polynomials the `poly` function interfaces with `Anova` and the `effects` package really nicely._
