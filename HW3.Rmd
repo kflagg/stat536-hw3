@@ -1,6 +1,8 @@
 ---
 title: "Time Series HW 3"
-author: "Kenny Flagg and Paul Harmon"
+author: |
+  | Kenny Flagg and Paul Harmon
+  | __who have not yet worked together and want the bonus!__
 date: "September 16, 2016"
 output: pdf_document
 ---
