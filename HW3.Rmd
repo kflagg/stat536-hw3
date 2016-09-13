@@ -80,12 +80,24 @@ plot(allEffects(had.lm1))
 ```
 
 5) _Check the residuals versus fitted values for any evidence of nonlinearity in the residuals vs fitted that was missed by the model with a linear trend and month component. Also note any potential issues with the constant variance assumption._
+```{r}
+plot(had.lm1$fitted.values, had.lm1$residuals, pch = 20, col = "blue2", main = "Residuals vs. Fitted Values", xlab = "Fitted Values", ylab = "Residuals")
+```
 
 6) _You can add higher order polynomial terms to models using `x1+I(x1^2)+I(x1^3)`... or using the `poly` function, such as `poly(x1,3,raw=T)` for a cubic polynomial that includes the linear and quadratic components (we want this!). The `raw=T` keeps the variables in their raw or input format. Estimate the same model but now using polynomial trends that steps up from linear (poly(time,1,raw=T)) and stop when you get a failure to estimate a part of the model. Briefly discuss what happened._
+```{r}
+
+```
 
 7) _If we center or, even better, make the polynomial functions orthogonal to one another, we can avoid the issue in the previous question. Use `poly(x1,?,raw=F)` and step up the polynomial order for time until the p-value for the last coefficient (use `summary()`) is "large", reporting the single test result for each step in the building process. Then drop back one order and re-fit the model. Report the `effects` plot of the resulting model and describe the estimated trend. Note: aside from access to orthogonal polynomials the `poly` function interfaces with `Anova` and the `effects` package really nicely._
+```{r}
+
+```
 
 8) _Check the diagnostic plots from your final model. Does anything improve from the first version. Also plot the residuals vs time and compare that plot to residuals vs fitted._
+```{r}
+
+```
 
 
 9) _Run the following code so I can see what version of R you are now using:_
