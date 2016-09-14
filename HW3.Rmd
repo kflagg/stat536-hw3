@@ -114,7 +114,7 @@ pvals[i] = (summary(lm.poly.1)$coefficients[i,4])
 }
 pvals
 which(pvals > 0.05)
-lm.poly.final = lm(median.temp.anom ~ poly(hadcrut$yearfrac,10,raw = FALSE), data = hadcrut)
+lm.poly.final = lm(median.temp.anom ~ poly(yearfrac,10,raw = FALSE), data = hadcrut)
 plot(allEffects(lm.poly.final))
 ```
 
