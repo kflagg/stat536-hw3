@@ -98,7 +98,7 @@ plot(had.lm1$fitted.values, had.lm1$residuals, pch = 20, col = "blue2", main = "
 
     ```{r problem6}
 for (i in 1:10){
-  had.lm.poly = lm(median.temp.anom ~ poly(yearfrac,i,raw = TRUE), data = hadcrut)
+  had.lm.poly = lm(median.temp.anom ~ poly(yearfrac,i,raw = TRUE) + month, data = hadcrut)
   print(summary(had.lm.poly))
 }
 ```
@@ -110,12 +110,12 @@ for (i in 1:10){
     ```{r problem7}
 pvals <- numeric(20)
 for (i in 1:20){
-  lm.poly.1 = lm(median.temp.anom ~ poly(yearfrac,i,raw = FALSE), data = hadcrut) 
+  lm.poly.1 = lm(median.temp.anom ~ poly(yearfrac,i,raw = FALSE)+ month, data = hadcrut) 
   pvals[i] = (summary(lm.poly.1)$coefficients[i,4])
 }
 pvals
 which(pvals > 0.05)
-lm.poly.final = lm(median.temp.anom ~ poly(yearfrac,10,raw = FALSE), data = hadcrut)
+lm.poly.final = lm(median.temp.anom ~ poly(yearfrac,10,raw = FALSE) + month , data = hadcrut)
 plot(allEffects(lm.poly.final))
 ```
 
