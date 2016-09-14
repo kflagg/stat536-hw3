@@ -77,6 +77,8 @@ hadcrut$yearfrac <- as.vector(time(hadcrut.ts))
 hadcrut$month <- factor(round(1 + 12 * (hadcrut$yearfrac %% 1), 0))
 had.lm1 <- lm(median.temp.anom ~ month + yearfrac, data = hadcrut)
 summary(had.lm1)
+library(car)
+Anova(had.lm1, test = "F", type = "III") #test for the month component
 
 require(effects)
 plot(allEffects(had.lm1))
@@ -93,7 +95,8 @@ plot(had.lm1$fitted.values, had.lm1$residuals, pch = 20, col = "blue2", main = "
 
 6) _You can add higher order polynomial terms to models using `x1+I(x1^2)+I(x1^3)`... or using the `poly` function, such as `poly(x1,3,raw=T)` for a cubic polynomial that includes the linear and quadratic components (we want this!). The `raw=T` keeps the variables in their raw or input format. Estimate the same model but now using polynomial trends that steps up from linear (poly(time,1,raw=T)) and stop when you get a failure to estimate a part of the model. Briefly discuss what happened._
 
-The following code estimates the ith-degree polynomial, where i ranges from 1 to 10. Thus, we see that from the returned summary output we get estimates for the coefficients up to the 5th degree polynomial. (Note that had we successfully estimated every part of the model for all 10 coefficients, we would have simply expanded our for-loop to contain more iterations.) It appears that the 5th degree 
+__The following code estimates the ith-degree polynomial, where i ranges from 1 to 10. Thus, we see that from the returned summary output we get estimates for the coefficients up to the 5th degree polynomial. (Note that had we successfully estimated every part of the model for all 10 coefficients, we would have simply expanded our for-loop to contain more iterations.) It appears that the 5th degree__
+
 ```{r problem 6}
 for (i in 1:10){
 had.lm.poly = lm(median.temp.anom ~ poly(yearfrac,i,raw = TRUE), data = hadcrut)
@@ -102,17 +105,27 @@ print(summary(had.lm.poly))
 ```
 
 7) _If we center or, even better, make the polynomial functions orthogonal to one another, we can avoid the issue in the previous question. Use `poly(x1,?,raw=F)` and step up the polynomial order for time until the p-value for the last coefficient (use `summary()`) is "large", reporting the single test result for each step in the building process. Then drop back one order and re-fit the model. Report the `effects` plot of the resulting model and describe the estimated trend. Note: aside from access to orthogonal polynomials the `poly` function interfaces with `Anova` and the `effects` package really nicely._
+
+***The first coefficient with a "large" p-value was the 11th-order coefficient. Thus, we re-fit the model with a 10th order polynomial. The effects plot of the resulting model is also included.  ***
 ```{r problem 7}
-lm.poly.1 = lm(median.temp.anom ~ poly(hadcrut$yearfrac,2,raw = FALSE), data = hadcrut) poly(hadcrut$yearfrac,2,raw = FALSE)
-
-summary(lm.poly.1)
-
+for (i in 1:20){
+lm.poly.1 = lm(median.temp.anom ~ poly(hadcrut$yearfrac,i,raw = FALSE), data = hadcrut) 
+pvals[i] = (summary(lm.poly.1)$coefficients[i,4])
+}
+pvals
+which(pvals > 0.05)
+lm.poly.final = lm(median.temp.anom ~ poly(hadcrut$yearfrac,10,raw = FALSE), data = hadcrut)
+plot(allEffects(lm.poly.final))
 ```
 
 8) _Check the diagnostic plots from your final model. Does anything improve from the first version. Also plot the residuals vs time and compare that plot to residuals vs fitted._
+
+_Based on the plots below, we can see that...
+
+Further, the plot of residuals vs. time shows...
 ```{r}
-plot(lm.poly.1)
-plot(hadcrut$yearfrac,resid(lm.poly.1), main = "Residuals vs.Time)
+plot(lm.poly.final)
+plot(hadcrut$yearfrac,resid(lm.poly.final), main = "Residuals vs.Time)
 ```
 
 
