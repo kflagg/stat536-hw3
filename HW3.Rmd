@@ -124,8 +124,10 @@ _Based on the plots below, we can see that...
 
 Further, the plot of residuals vs. time shows...
 ```{r}
+par(mfrow = c(2,2))
 plot(lm.poly.final)
-plot(hadcrut$yearfrac,resid(lm.poly.final), main = "Residuals vs.Time)
+par(mfrow = c(1,1))
+plot(hadcrut$yearfrac,resid(lm.poly.final), main = "Residuals vs.Time",xlab = "Time", ylab = "Residuals", pch = 20)
 ```
 
 
