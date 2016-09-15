@@ -128,9 +128,8 @@ plot(allEffects(lm.poly.final))
 
 8) _Check the diagnostic plots from your final model. Does anything improve from the first version. Also plot the residuals vs time and compare that plot to residuals vs fitted._
 
-    Based on the plots below, we can see that...
-
-    Further, the plot of residuals vs. time shows...
+    Based on the plots below, we can see that nothing appeared to improve compared to the first version. The issues of non-constant variance appear to be as bad or worse than before; the plot of residuals vs. fitted values is funnel shaped rather than relatively uniform. The issues with non-linearity may be improved somewhat; however, this may be an artifact of the scaling of the plot. From the QQ plot, the tails may be a little heavy but the assumption of normality is not likely violated. 
+    Further, the plot of residuals vs. time does appear somewhat less curvy than before. Given that imposing higher-ordered polynomial terms into the model is unlikely to solve any problems with heteroskedasticity, and that the goal of using them was to account for non-linear trends in the data, it appears that the inclusion of higher-ordered terms was at least somewhat effective in mitigating the curviness of the trend. 
 
     ```{r problem8}
 par(mfrow = c(2,2))
@@ -145,7 +144,7 @@ plot(hadcrut$yearfrac,resid(lm.poly.final), main = "Residuals vs.Time",xlab = "T
 ### Documenting R version 
 
 ```{r}
-sessionInfo()$R.version$nickname
+print(sessionInfo()$R.version$nickname)
 getRversion()
-sessionInfo()$platform
+print(sessionInfo()$platform)
 ```
