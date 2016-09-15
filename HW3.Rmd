@@ -37,19 +37,17 @@ plot(weather$Yearfrac, weather$MMXT, pch = 20, col = "blue2",main = "Original TS
 
 2) _In the de-seasonalized Bozeman temperature data set, re-assess evidence for the linear trend. Compare the result (test statistic, degrees of freedom and size of p-value) of just fitting a linear time trend in these de-seasonalized responses to the result from our original model with a linear year component and a month adjustment (not the quadratic trend model)._
 
-In the tables below, we list the tests for the linear year-based trend.  The test for the original model is a $t_{1371}$ as is the test for the deseasonalized model.  In both models we find strong evidence in favor of the linear time trend; the seasonalized model yields a p-value of 0.00014 and the deseasonalized model yields a p-value of 0.00014. Further, the raw slopes are very similar - this indicates that the deseasonalization of the data preserved the long-term time trend. 
+    In the tables below, we list the tests for the linear year-based trend.  The test for the original model is a $t_{1371}$ as is the test for the deseasonalized model.  In both models we find strong evidence in favor of the linear time trend; the seasonalized model yields a p-value of 0.00014 and the deseasonalized model yields a p-value of 0.00014. Further, the raw slopes are very similar - this indicates that the deseasonalization of the data preserved the long-term time trend. 
 
-    ```{r problem2}
+```{r problem2}
 library(pander) #because Paul thinks "library" is cooler than "require"
-    lm.seasoned <- lm(MMXT ~ Yearfrac + Month, data = weather)
+lm.seasoned <- lm(MMXT ~ Yearfrac + Month, data = weather)
 lm.deseasoned <- lm(lm.weather$residuals ~ Yearfrac + Month, data = weather)
 pander(summary(lm.seasoned))
 pander(summary(lm.deseasoned))
 ```
 
-    After de-seasonalization, there is strong evidence of a linear trend in MMXT through time ($t_{1372}=14.00$, p-value $<0.0001$). This is very similar to the result when when month is included as a factor, where the estimated year term has $t_{1361}=13.94$ with p-value $<0.0001$. It seems like the degrees of freedom for the de-seasonalized model is wrong because it doesn't account for estimating the monthly means.
-
-
+     
 3) _I briefly discussed the HADCRUT data set in class. We will consider the HADCRUT4 series of temperature anomalies for the Nothern Hemisphere. The fully up to date data set is available at: `http://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/time_series/HadCRUT.4.4.0.0.monthly_nh.txt`_
 
     _Download the ensemble median monthly northern hemisphere temperature data. We will use the entire time series that is currently available (January 1850 to July 2016). You might want to read `http://www.metoffice.gov.uk/hadobs/hadcrut4/data/current/series_format.html` for more information on the columns in the data set._
@@ -58,8 +56,11 @@ pander(summary(lm.deseasoned))
 
     _Make a plot versus time of the ensemble medians and use that as your response variable in the following questions. Discuss trend, seasonality, outliers, and variability._
 
-    ```{r problem3}
-hadcrut <- read.table('HadCRUT.4.4.0.0.monthly_nh.txt',
+    The plot of median temperature anomaly over time appears to show some increase in temperatures over time. Further, the variability of temperatures was wider during early times, likely due to the fact that people measuring temperatures in the late 1800s/early 1900s were using less precise methods to measure temperature. There are a couple of outliers in the negative direction (there was an anomaly of -1.509 in 1893) but not any temperatures that appear to be outlying in the positive direction, especially given the increasing trend. We definitely see seasonal oscilations in the data; this is to be expected. 
+
+```{r problem3}
+par(mfrow = c(1,1))
+    hadcrut <- read.table('HadCRUT.4.4.0.0.monthly_nh.txt',
                       col.names = c('Date', 'median.temp.anom',
                                     'bias.l95', 'bias.u95',
                                     'meas.l95', 'meas.u95',
@@ -67,6 +68,7 @@ hadcrut <- read.table('HadCRUT.4.4.0.0.monthly_nh.txt',
                                     'error.l95', 'error.u95',
                                     'l95', 'u95'))
 hadcrut.ts <- ts(hadcrut$median.temp.anom, start = 1850, frequency = 12)
+plot(hadcrut.ts, ylab = "Median Temperature Anomaly", main = "Temperature Anomaly over Time", col = "forestgreen")
 ```
 
 4) _Our main focus with these data will be on estimating the long-term trend, starting with polynomial trend models. But first, check for seasonality in a model that accounts for a linear time trend. Use our previous fractional year for the trend. Report an `effects` plot and a test for the month model component._
