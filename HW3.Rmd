@@ -103,6 +103,12 @@ for (i in 1:10){
 }
 ```
 
+```{r problem6_2}
+
+```
+
+
+
 7) _If we center or, even better, make the polynomial functions orthogonal to one another, we can avoid the issue in the previous question. Use `poly(x1,?,raw=F)` and step up the polynomial order for time until the p-value for the last coefficient (use `summary()`) is "large", reporting the single test result for each step in the building process. Then drop back one order and re-fit the model. Report the `effects` plot of the resulting model and describe the estimated trend. Note: aside from access to orthogonal polynomials the `poly` function interfaces with `Anova` and the `effects` package really nicely._
 
     ***The first coefficient with a "large" p-value was the 11th-order coefficient. Thus, we re-fit the model with a 10th order polynomial. The effects plot of the resulting model is also included.***
