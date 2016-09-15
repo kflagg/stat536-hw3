@@ -37,11 +37,14 @@ plot(weather$Yearfrac, weather$MMXT, pch = 20, col = "blue2",main = "Original TS
 
 2) _In the de-seasonalized Bozeman temperature data set, re-assess evidence for the linear trend. Compare the result (test statistic, degrees of freedom and size of p-value) of just fitting a linear time trend in these de-seasonalized responses to the result from our original model with a linear year component and a month adjustment (not the quadratic trend model)._
 
+In the tables below, we list the tests for the linear year-based trend.  The test for the original model is a $t_{1371}$ as is the test for the deseasonalized model.  In both models we find strong evidence in favor of the linear time trend; the seasonalized model yields a p-value of 0.00014 and the deseasonalized model yields a p-value of 0.00014. Further, the raw slopes are very similar - this indicates that the deseasonalization of the data preserved the long-term time trend. 
+
     ```{r problem2}
-lm.seasoned <- lm(MMXT ~ Yearfrac + MONTH, data = weather)
-lm.deseasoned <- lm(lm.weather$residuals ~ Yearfrac, data = weather)
-summary(lm.seasoned)
-summary(lm.deseasoned)
+library(pander) #because Paul thinks "library" is cooler than "require"
+    lm.seasoned <- lm(MMXT ~ Yearfrac + Month, data = weather)
+lm.deseasoned <- lm(lm.weather$residuals ~ Yearfrac + Month, data = weather)
+pander(summary(lm.seasoned))
+pander(summary(lm.deseasoned))
 ```
 
     After de-seasonalization, there is strong evidence of a linear trend in MMXT through time ($t_{1372}=14.00$, p-value $<0.0001$). This is very similar to the result when when month is included as a factor, where the estimated year term has $t_{1361}=13.94$ with p-value $<0.0001$. It seems like the degrees of freedom for the de-seasonalized model is wrong because it doesn't account for estimating the monthly means.
