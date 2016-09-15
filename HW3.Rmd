@@ -30,8 +30,8 @@ lm.weather = lm(MMXT ~ Month, data = weather)
 par(mfrow = c(1,2))
 plot(weather$Yearfrac, lm.weather$residuals, pch = 20, col = "orange4",
      main = "Residuals vs. Year", xlab = "Year", ylab = "Residuals")
-plot(weather$Yearfrac, weather$MMXT, pch = 20, col = "blue2",main = "Original TS", xlab = "Year", ylab = "MMXT")
-
+plot(weather$Yearfrac, weather$MMXT, pch = 20, col = "blue2",main = "Original TS",
+     xlab = "Year", ylab = "MMXT")
 ```
 
 
@@ -69,7 +69,8 @@ par(mfrow = c(1,1))
                                     'error.l95', 'error.u95',
                                     'l95', 'u95'))
 hadcrut.ts <- ts(hadcrut$median.temp.anom, start = 1850, frequency = 12)
-plot(hadcrut.ts, ylab = "Median Temperature Anomaly", main = "Temperature Anomaly over Time", col = "forestgreen")
+plot(hadcrut.ts, ylab = "Median Temperature Anomaly",
+     main = "Temperature Anomaly over Time", col = "forestgreen")
 ```
 
 4) _Our main focus with these data will be on estimating the long-term trend, starting with polynomial trend models. But first, check for seasonality in a model that accounts for a linear time trend. Use our previous fractional year for the trend. Report an `effects` plot and a test for the month model component._
@@ -78,11 +79,11 @@ plot(hadcrut.ts, ylab = "Median Temperature Anomaly", main = "Temperature Anomal
 
   Based on the F test (using Type III Sum of Squares), $F_{11, 1986}$, the p-value is very small. This indicates strong evidence in favor of a month effect after accounting for everything else in the model (i.e. the linear year trend). 
 
-    ```{r problem4, message = FALSE}
+```{r problem4, message = FALSE}
 hadcrut$yearfrac <- as.vector(time(hadcrut.ts))
 hadcrut$month <- factor(round(1 + 12 * (hadcrut$yearfrac %% 1), 0))
 had.lm1 <- lm(median.temp.anom ~ month + yearfrac, data = hadcrut)
-summary(had.lm1)
+pander(had.lm1)
 library(car)
 pander(Anova(had.lm1, test = "F", type = "III")) #test for the month component
 
@@ -95,18 +96,25 @@ plot(allEffects(had.lm1))
     Based on the plot below, there appears to be a wavy pattern occuring in the residuals over time that is not being accounted for in the model with a linear trend and month component.  Furthermore, the spread of observations is not constant; it appears that the spread for smaller fitted values is wider near fitted values of -0.5 and much narrower for larger fitted values. 
     
     ```{r problem5}
-plot(had.lm1$fitted.values, had.lm1$residuals, pch = 20, col = "blue2", main = "Residuals vs. Fitted Values", xlab = "Fitted Values", ylab = "Residuals")
+plot(had.lm1$fitted.values, had.lm1$residuals, pch = 20, col = "blue2",
+     main = "Residuals vs. Fitted Values", xlab = "Fitted Values", ylab = "Residuals")
 ```
 
 6) _You can add higher order polynomial terms to models using `x1+I(x1^2)+I(x1^3)`... or using the `poly` function, such as `poly(x1,3,raw=T)` for a cubic polynomial that includes the linear and quadratic components (we want this!). The `raw=T` keeps the variables in their raw or input format. Estimate the same model but now using polynomial trends that steps up from linear (poly(time,1,raw=T)) and stop when you get a failure to estimate a part of the model. Briefly discuss what happened._
 
     The following code estimates the ith-degree polynomial, where i ranges from 1 to 10. Thus, we see that from the returned summary output we get estimates for the coefficients up to the 5th degree polynomial. At the fifth-degree polynomial estimate, the model failed to estimate a coefficient; it also failed on several other higher-ordered terms. Looking at the residuals vs. fitted values plot previously produced, it appears that a fourth-degree polynomial would be appropriate but the graph indicates no reason that the model could not be fit to a higher-ordered model. Theoretically, we could fit a very high (1982)-degree polynomial to these data. 
 
-    ```{r problem6}
-for (i in 1:10){
-  had.lm.poly = lm(median.temp.anom ~ poly(yearfrac,i,raw = TRUE) + month, data = hadcrut)
-  print(summary(had.lm.poly))
-}
+```{r problem6}
+orders <- 1:10
+names(orders) <- paste("Order", orders)
+coefs <- sapply(orders, function(i){
+    had.lm.poly = lm(median.temp.anom ~ poly(yearfrac, i, raw = TRUE) + month, data = hadcrut)
+    coefs10 <- rep(NA, 10)
+    coefs10[1:i] <- coef(had.lm.poly)[grepl("poly", names(coef(had.lm.poly)))]
+    names(coefs10) <- paste0("Year", "$^{", orders, "}$ coef")
+    return(coefs10)
+  })
+pander(coefs, caption = "Polynomial coefficient estimates for polynomial models of orders 1 to 10.")
 ```
 
 
