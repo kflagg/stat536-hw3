@@ -41,6 +41,7 @@ plot(weather$Yearfrac, weather$MMXT, pch = 20, col = "blue2",main = "Original TS
 
 ```{r problem2}
 library(pander) #because Paul thinks "library" is cooler than "require"
+panderOptions('missing', '-')
 lm.seasoned <- lm(MMXT ~ Yearfrac + Month, data = weather)
 lm.deseasoned <- lm(lm.weather$residuals ~ Yearfrac + Month, data = weather)
 pander(summary(lm.seasoned))
