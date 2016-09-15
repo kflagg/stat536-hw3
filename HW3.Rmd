@@ -130,7 +130,8 @@ for (i in 1:20){
 }
 pvals
 which(pvals > 0.05)
-lm.poly.final = lm(median.temp.anom ~ poly(yearfrac,10,raw = FALSE) + month , data = hadcrut)
+lm.poly.final = lm(median.temp.anom ~ poly(yearfrac,10,raw = FALSE) + month ,
+                   data = hadcrut)
 plot(allEffects(lm.poly.final))
 ```
 
@@ -143,7 +144,8 @@ plot(allEffects(lm.poly.final))
 par(mfrow = c(2,2))
 plot(lm.poly.final)
 par(mfrow = c(1,1))
-plot(hadcrut$yearfrac,resid(lm.poly.final), main = "Residuals vs.Time",xlab = "Time", ylab = "Residuals", pch = 20)
+plot(hadcrut$yearfrac,resid(lm.poly.final), main = "Residuals vs.Time",
+     xlab = "Time", ylab = "Residuals", pch = 20)
 ```
 
 
