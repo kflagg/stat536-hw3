@@ -15,25 +15,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 _You can alone or in pairs that may or may not be people you worked with before. You can discuss it with old partners but should try work as much as possible with new collaborators. 5% bonus if you find someone completely new to work with - that you did not work with on first two assignments._
 
-_I mentioned de-seasonalizing of time series, where the seasonal variation is removed from the series to highlight variation at either higher or lower frequencies. There are a variety of techniques for doing this but the simplest is to just subtract the mean for each month from the observations. And the easiest way to find that is using `lm(y~month,data=...)`._
-
-**Note that Kenny and Paul have *NOT* worked together on any previous homework assignments.**
-
 1) _For the Bozeman temperature data from HW 1 and 2, estimate a model with month only, subtract its fitted values from the responses (or just extract residuals). Plot the residuals vs the fractional `Year` variable and compare the plot of this result to the plot of the original time series._
+The plot of the residuals and the plot of the original time series are shown below. Note that because the residuals have mean 0, the plot fo the residuals is centered around 0 whereas the plot of the original TS is still on the temperature scale. However, the same increasing linear trend appears evident in both plots. 
 
     ```{r problem1}
 weather = read.csv("rawbozemandata.csv", header = TRUE)
 
-weather$YEAR = substr(as.character(weather$DATE), 0,nchar(weather$DATE)-2)
-weather$MONTH = as.factor(substr(as.character(weather$DATE),5,nchar(weather$DATE)))
 weather$year = (floor(weather$DATE/100))
 weather$Month<-round((weather$DATE/100-weather$year)*100,1)
 weather$Yearfrac<-weather$year+(weather$Month-1)/12 #makes it an integer variable
 #fit the linear model
-lm.weather = lm(MMXT ~ MONTH, data = weather)
+lm.weather = lm(MMXT ~ Month, data = weather)
 #lm.weather$residuals
+par(mfrow = c(1,2))
 plot(weather$Yearfrac, lm.weather$residuals, pch = 20, col = "orange4",
      main = "Residuals vs. Year", xlab = "Year", ylab = "Residuals")
+plot(weather$Yearfrac, weather$MMXT, pch = 20, col = "blue2",main = "Original TS", xlab = "Year", ylab = "MMXT")
+
 ```
 
 
